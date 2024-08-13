@@ -10,7 +10,7 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "categories" (
-  "id" uuid,
+  "id" uuid PRIMARY KEY,
   "name" varchar UNIQUE NOT NULL,
   "description" text NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT 'now()',
@@ -18,7 +18,7 @@ CREATE TABLE "categories" (
 );
 
 CREATE TABLE "products" (
-  "id" uuid,
+  "id" uuid PRIMARY KEY,
   "name" varchar NOT NULL,
   "description" text NOT NULL,
   "price" decimal NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE "products" (
 );
 
 CREATE TABLE "orders" (
-  "id" uuid,
+  "id" uuid PRIMARY KEY,
   "user_id" uuid NOT NULL,
   "total_amount" decimal NOT NULL,
   "status" varchar NOT NULL,
