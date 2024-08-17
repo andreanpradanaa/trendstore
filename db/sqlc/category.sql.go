@@ -8,38 +8,25 @@ package db
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createCategory = `-- name: CreateCategory :one
 INSERT INTO categories (
-    id,
     name,
-    description,
-    created_at,
-    updated_at
+    description
 ) VALUES (
-    $1, $2, $3, $4, $5
+    $1, $2
 ) RETURNING id, name, description, created_at, updated_at
 `
 
 type CreateCategoryParams struct {
-	ID          uuid.UUID        `json:"id"`
-	Name        string           `json:"name"`
-	Description string           `json:"description"`
-	CreatedAt   pgtype.Timestamp `json:"created_at"`
-	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error) {
-	row := q.db.QueryRow(ctx, createCategory,
-		arg.ID,
-		arg.Name,
-		arg.Description,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
+	row := q.db.QueryRow(ctx, createCategory, arg.Name, arg.Description)
 	var i Category
 	err := row.Scan(
 		&i.ID,
@@ -85,17 +72,18 @@ SET
     name = COALESCE($1, name),
     description = COALESCE($2, description)
 WHERE
-    name = $1
+    id = $3
 RETURNING id, name, description, created_at, updated_at
 `
 
 type UpdateCategoryParams struct {
 	Name        pgtype.Text `json:"name"`
 	Description pgtype.Text `json:"description"`
+	ID          int64       `json:"id"`
 }
 
 func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error) {
-	row := q.db.QueryRow(ctx, updateCategory, arg.Name, arg.Description)
+	row := q.db.QueryRow(ctx, updateCategory, arg.Name, arg.Description, arg.ID)
 	var i Category
 	err := row.Scan(
 		&i.ID,

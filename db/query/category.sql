@@ -1,12 +1,9 @@
 -- name: CreateCategory :one
 INSERT INTO categories (
-    id,
     name,
-    description,
-    created_at,
-    updated_at
+    description
 ) VALUES (
-    $1, $2, $3, $4, $5
+    $1, $2
 ) RETURNING *;
 
 -- name: GetCategory :one
@@ -19,7 +16,7 @@ SET
     name = COALESCE(sqlc.narg(name), name),
     description = COALESCE(sqlc.narg(description), description)
 WHERE
-    name = sqlc.arg(name)
+    id = sqlc.arg(id)
 RETURNING *;
 
 -- name: DeleteCategory :exec
