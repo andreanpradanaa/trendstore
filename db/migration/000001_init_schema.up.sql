@@ -1,66 +1,66 @@
 CREATE TABLE "users" (
-  "id" uuid PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "email" varchar UNIQUE NOT NULL,
   "hashed_password" varchar NOT NULL,
   "address" varchar,
   "phone" varchar NOT NULL,
-  "created_at" timestamp NOT NULL DEFAULT 'now()',
-  "updated_at" timestamp
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT('0001-01-01 00:00:00Z')
 );
 
 CREATE TABLE "categories" (
-  "id" uuid PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "name" varchar UNIQUE NOT NULL,
   "description" text NOT NULL,
-  "created_at" timestamp NOT NULL DEFAULT 'now()',
-  "updated_at" timestamp
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT('0001-01-01 00:00:00Z')
 );
 
 CREATE TABLE "products" (
-  "id" uuid PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "description" text NOT NULL,
   "price" decimal NOT NULL,
   "stock" integer NOT NULL,
-  "category_id" uuid NOT NULL,
-  "created_at" timestamp NOT NULL DEFAULT 'now()',
-  "updated_at" timestamp
+  "category_id" bigserial NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT('0001-01-01 00:00:00Z')
 );
 
 CREATE TABLE "orders" (
-  "id" uuid PRIMARY KEY,
-  "user_id" uuid NOT NULL,
+  "id" bigserial PRIMARY KEY,
+  "user_id" bigserial NOT NULL,
   "total_amount" decimal NOT NULL,
   "status" varchar NOT NULL,
-  "created_at" timestamp NOT NULL DEFAULT 'now()',
-  "updated_at" timestamp
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT('0001-01-01 00:00:00Z')
 );
 
 CREATE TABLE "order_items" (
-  "id" uuid PRIMARY KEY,
-  "order_id" uuid NOT NULL,
-  "product_id" uuid NOT NULL,
+  "id" bigserial PRIMARY KEY,
+  "order_id" bigserial NOT NULL,
+  "product_id" bigserial NOT NULL,
   "quantity" integer NOT NULL,
   "price" decimal NOT NULL,
-  "created_at" timestamp NOT NULL,
-  "updated_at" timestamp NOT NULL
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT('0001-01-01 00:00:00Z')
 );
 
 CREATE TABLE "charts" (
-  "id" uuid PRIMARY KEY,
-  "user_id" uuid NOT NULL,
-  "created_at" timestamp NOT NULL,
-  "updated_at" timestamp NOT NULL
+  "id" bigserial PRIMARY KEY,
+  "user_id" bigserial NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT('0001-01-01 00:00:00Z')
 );
 
 CREATE TABLE "chart_items" (
-  "id" uuid PRIMARY KEY,
-  "cart_id" uuid NOT NULL,
-  "product_id" uuid NOT NULL,
+  "id" bigserial PRIMARY KEY,
+  "cart_id" bigserial NOT NULL,
+  "product_id" bigserial NOT NULL,
   "quantity" integer NOT NULL,
-  "created_at" timestamp NOT NULL,
-  "updated_at" timestamp NOT NULL
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT('0001-01-01 00:00:00Z')
 );
 
 CREATE INDEX ON "users" ("email");
