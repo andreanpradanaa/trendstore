@@ -84,3 +84,22 @@ func TestDeleteCategory(t *testing.T) {
 	require.EqualError(t, err, pgx.ErrNoRows.Error())
 	require.Empty(t, category2)
 }
+
+func TestListCategory(t *testing.T) {
+	for i := 0; i < 4; i++ {
+		createRandomCategory(t)
+	}
+
+	arg := ListCategoryParams{
+		Limit:  5,
+		Offset: 0,
+	}
+
+	categories, err := testStore.ListCategory(context.Background(), arg)
+	require.NoError(t, err)
+	require.Len(t, categories, 5)
+
+	for _, category := range categories {
+		require.NotEmpty(t, category)
+	}
+}
