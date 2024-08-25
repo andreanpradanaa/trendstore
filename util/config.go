@@ -3,7 +3,9 @@ package util
 import "github.com/spf13/viper"
 
 type Config struct {
-	DB_SOURCE string `mapstructure:"DB_SOURCE"`
+	DB_SOURCE         string `mapstructure:"DB_SOURCE"`
+	HTTPServerAddress string `mapstructure:"HTTP_SERVER_ADDRESS"`
+	DBSource          string `mapstructure:"DB_SOURCE"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
