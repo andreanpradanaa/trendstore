@@ -1,4 +1,4 @@
-# 📦 Daftar API E-Commerce
+# 📦 Daftar API Trendstore
 
 ### 🛠️ Admin Panel
 
