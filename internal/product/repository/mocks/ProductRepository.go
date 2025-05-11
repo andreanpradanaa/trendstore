@@ -30,6 +30,36 @@ func (_m *ProductRepository) CreateProduct(args *model.Product) error {
 	return r0
 }
 
+// ListProduct provides a mock function with no fields
+func (_m *ProductRepository) ListProduct() ([]model.ProductListItem, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListProduct")
+	}
+
+	var r0 []model.ProductListItem
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]model.ProductListItem, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() []model.ProductListItem); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]model.ProductListItem)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // NewProductRepository creates a new instance of ProductRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewProductRepository(t interface {

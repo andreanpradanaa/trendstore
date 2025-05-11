@@ -27,10 +27,10 @@ func main() {
 
 	// Product Routes
 	e.POST("api/v1/products", productHandler.CreateProduct)
+	e.GET("api/v1/products", productHandler.ListProduct)
 
 	// TODO: add api product
 	// GET /api/v1/products/{productId}
-	// GET /api/v1/products
 	// GET /api/v1/products?categoryId={catId}
 	// GET /api/v1/products?ids=1,2,3
 	// PUT /api/v1/products/{productId}

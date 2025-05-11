@@ -16,3 +16,16 @@ type Product struct {
 func (p *Product) TableName() string {
 	return "products"
 }
+
+type ProductListItem struct {
+	ID          int64
+	Name        string
+	Description string
+	Price       float64
+	Stock       int64
+	CategoryID  int64
+}
+
+func (ProductListItem) TableName() string {
+	return "products"
+}
