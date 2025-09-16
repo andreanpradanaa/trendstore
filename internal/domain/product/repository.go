@@ -1,6 +1,6 @@
 package product
 
-//go:generate mockery --name=ProductRepository --output=./mocks
+//go:generate mockery --name=Repository --structname=ProductRepository --output=../../../test/mocks --filename=product_repository.go
 type Repository interface {
 	Create(args *Product) error
 	List() ([]Product, error)
