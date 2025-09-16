@@ -1,0 +1,34 @@
+package dto
+
+type ProductRequest struct {
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	Stock       int64   `json:"stock"`
+	CategoryID  int64   `json:"category_id"`
+}
+
+type ProductResponse struct {
+	ID          int64   `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	Stock       int64   `json:"stock"`
+	CategoryID  int64   `json:"category_id"`
+	SKU         string  `json:"sku"`
+	IsActive    bool    `json:"is_active"`
+	ImageURL    string  `json:"image_url"`
+	Weight      float64 `json:"weight"`
+	CreatedAt   string  `json:"created_at"`
+	UpdatedAt   string  `json:"updated_at"`
+}
+
+type ProductListResponse struct {
+	ID          int64   `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	Stock       int64   `json:"stock"`
+	CategoryID  int64   `json:"category_id"`
+	ImageURL    string  `json:"image_url"`
+}

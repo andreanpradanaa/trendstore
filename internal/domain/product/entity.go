@@ -1,4 +1,4 @@
-package model
+package product
 
 import "time"
 
@@ -9,23 +9,14 @@ type Product struct {
 	Price       float64   `json:"price"`
 	Stock       int64     `json:"stock"`
 	CategoryID  int64     `json:"category_id"`
+	SKU         string    `json:"sku"`
+	IsActive    bool      `json:"is_active"`
+	ImageURL    string    `json:"image_url"`
+	Weight      float64   `json:"weight"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func (p *Product) TableName() string {
-	return "products"
-}
-
-type ProductListItem struct {
-	ID          int64
-	Name        string
-	Description string
-	Price       float64
-	Stock       int64
-	CategoryID  int64
-}
-
-func (ProductListItem) TableName() string {
 	return "products"
 }

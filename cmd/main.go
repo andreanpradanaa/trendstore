@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/andreanpradanaa/trendstore/internal/product/handler"
-	"github.com/andreanpradanaa/trendstore/internal/product/repository"
-	"github.com/andreanpradanaa/trendstore/internal/product/usecase"
+	appProduct "github.com/andreanpradanaa/trendstore/internal/application/product"
+	httpProduct "github.com/andreanpradanaa/trendstore/internal/infrastructure/http/product"
+	repoProduct "github.com/andreanpradanaa/trendstore/internal/infrastructure/persistence/repositories"
 	"github.com/labstack/echo/v4"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -21,13 +21,13 @@ func main() {
 		log.Fatal("failed to connect database!")
 	}
 
-	productRepo := repository.NewProduct(db)
-	productUsecase := usecase.NewProductUsecase(productRepo)
-	productHandler := handler.NewProductHandler(productUsecase)
+	productRepo := repoProduct.NewProductRepository(db)
+	productService := appProduct.NewService(productRepo)
+	productHandler := httpProduct.NewHandler(productService)
 
 	// Product Routes
-	e.POST("api/v1/products", productHandler.CreateProduct)
-	e.GET("api/v1/products", productHandler.ListProduct)
+	e.POST("api/v1/products", productHandler.Create)
+	e.GET("api/v1/products", productHandler.List)
 
 	// TODO: add api product
 	// GET /api/v1/products/{productId}
