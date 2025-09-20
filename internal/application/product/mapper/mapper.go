@@ -1,8 +1,6 @@
 package mapper
 
 import (
-	"time"
-
 	"github.com/andreanpradanaa/trendstore/internal/application/product/dto"
 	"github.com/andreanpradanaa/trendstore/internal/domain/product"
 )
@@ -19,8 +17,8 @@ func ToResponse(domainProduct *product.Product) dto.ProductResponse {
 		IsActive:    domainProduct.IsActive,
 		ImageURL:    domainProduct.ImageURL,
 		Weight:      domainProduct.Weight,
-		CreatedAt:   domainProduct.CreatedAt.Format(time.RFC3339),
-		UpdatedAt:   domainProduct.UpdatedAt.Format(time.RFC3339),
+		CreatedAt:   domainProduct.CreatedAt,
+		UpdatedAt:   domainProduct.UpdatedAt,
 	}
 }
 

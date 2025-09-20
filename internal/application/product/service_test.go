@@ -142,3 +142,73 @@ func TestService_Create(t *testing.T) {
 		})
 	}
 }
+
+func TestService_GetByID(t *testing.T) {
+	tests := []struct {
+		name      string
+		mockSetup func(*mocks.ProductRepository)
+		id        int64
+		want      *dto.ProductResponse
+		wantErr   bool
+	}{
+		{
+			name: "Success - Get Product By ID",
+			mockSetup: func(mockRepo *mocks.ProductRepository) {
+				mockRepo.On("GetByID", mock.Anything).Return(&product.Product{
+					ID:          1,
+					Name:        "NIKE",
+					Description: "Sepatu",
+					Price:       500,
+					Stock:       10,
+					CategoryID:  3,
+				}, nil).Once()
+			},
+			id: 1,
+			want: &dto.ProductResponse{
+				ID:          1,
+				Name:        "NIKE",
+				Description: "Sepatu",
+				Price:       500,
+				Stock:       10,
+				CategoryID:  3,
+			},
+			wantErr: false,
+		},
+		{
+			name: "Error Repository - Get Product By ID",
+			mockSetup: func(mockRepo *mocks.ProductRepository) {
+				mockRepo.On("GetByID", mock.Anything).Return(nil, errors.New(mock.Anything)).Once()
+			},
+			id:      1,
+			want:    nil,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Setup mock
+			mockRepo := new(mocks.ProductRepository)
+			if tt.mockSetup != nil {
+				tt.mockSetup(mockRepo)
+			}
+
+			// Create service dengan mock
+			service := NewService(mockRepo)
+
+			// Execute method
+			got, err := service.GetByID(tt.id)
+
+			// Assertions
+			if tt.wantErr {
+				assert.Error(t, err)
+				assert.Nil(t, got)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+
+			// Verify mock expectations
+			mockRepo.AssertExpectations(t)
+		})
+	}
+}

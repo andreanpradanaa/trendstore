@@ -49,3 +49,13 @@ func (s *Service) List() ([]dto.ProductListResponse, error) {
 
 	return response, nil
 }
+
+func (s *Service) GetByID(id int64) (*dto.ProductResponse, error) {
+	products, err := s.productRepo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	response := mapper.ToResponse(products)
+	return &response, nil
+}

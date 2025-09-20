@@ -30,6 +30,36 @@ func (_m *ProductRepository) Create(args *product.Product) error {
 	return r0
 }
 
+// GetByID provides a mock function with given fields: id
+func (_m *ProductRepository) GetByID(id int64) (*product.Product, error) {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetByID")
+	}
+
+	var r0 *product.Product
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int64) (*product.Product, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(int64) *product.Product); ok {
+		r0 = rf(id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*product.Product)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int64) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // List provides a mock function with no fields
 func (_m *ProductRepository) List() ([]product.Product, error) {
 	ret := _m.Called()

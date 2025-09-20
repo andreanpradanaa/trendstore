@@ -1,12 +1,14 @@
 package product
 
 import (
-	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/andreanpradanaa/trendstore/internal/application/product"
 	"github.com/andreanpradanaa/trendstore/internal/application/product/dto"
 	"github.com/andreanpradanaa/trendstore/pkg/response"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 type Handler struct {
@@ -22,35 +24,51 @@ func NewHandler(productService product.Service) *Handler {
 func (h *Handler) Create(c echo.Context) error {
 	form := &dto.ProductRequest{}
 
-	err := c.Bind(form)
-	if err != nil {
-		return err
+	if err := c.Bind(form); err != nil {
+		return response.BadRequest(c, "invalid request payload", err)
 	}
 
-	err = h.productService.Create(form)
-	if err != nil {
-		return err
+	if err := c.Validate(form); err != nil {
+		return response.BadRequest(c, "validation failed", err)
 	}
 
-	return c.JSON(http.StatusCreated, map[string]string{
-		"status":  "ok",
-		"message": "successfully create product",
-	})
+	if err := h.productService.Create(form); err != nil {
+		return response.InternalServerError(c, "failed to create product", err)
+	}
+
+	return response.SuccessCreated(c, "product created successfully", nil)
 }
 
 func (h *Handler) List(c echo.Context) error {
 	res, err := h.productService.List()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, response.Response[any]{
-			Status:  false,
-			Message: "Failed to fetch products",
-			Error:   err.Error(),
-		})
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
+			return response.NotFound(c, "products not found", err)
+		}
+		return response.InternalServerError(c, "failed to fetch products by id", err)
 	}
 
-	return c.JSON(http.StatusOK, response.Response[[]dto.ProductListResponse]{
-		Status:  true,
-		Message: "Products fetched successfully",
-		Data:    res,
-	})
+	return response.SuccessOK(c, "products fetched successfully", res)
+}
+
+func (h *Handler) GetByID(c echo.Context) error {
+	idStr := c.Param("id")
+	if idStr == "" {
+		return response.BadRequest(c, "product id is required", nil)
+	}
+
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		return response.BadRequest(c, "invalid product ID", err)
+	}
+
+	res, err := h.productService.GetByID(int64(id))
+	if err != nil {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
+			return response.NotFound(c, "product not found", err)
+		}
+		return response.InternalServerError(c, "failed to fetch product by id", err)
+	}
+
+	return response.SuccessOK(c, "product fetched successfully", res)
 }

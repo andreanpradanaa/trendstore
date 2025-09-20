@@ -34,3 +34,13 @@ func (r *ProductRepository) List() ([]product.Product, error) {
 
 	return res, nil
 }
+
+func (r *ProductRepository) GetByID(id int64) (*product.Product, error) {
+	res := &product.Product{}
+	err := r.db.First(res, id).Error
+	if err != nil {
+		return nil, fmt.Errorf("failed to find get product by id: %w", err)
+	}
+
+	return res, nil
+}
