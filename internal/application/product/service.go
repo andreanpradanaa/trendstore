@@ -66,36 +66,6 @@ func (s *Service) UpdateProduct(args *dto.ProductUpdateRequest) error {
 		return err
 	}
 
-	if args.Name != "" {
-		if err := exisitingProduct.ChangeName(args.Name); err != nil {
-			return err
-		}
-	}
-
-	if args.Description != "" {
-		if err := exisitingProduct.ChangeDescription(args.Description); err != nil {
-			return err
-		}
-	}
-
-	if args.Price != 0 {
-		if err := exisitingProduct.ChangePrice(args.Price); err != nil {
-			return err
-		}
-	}
-
-	if args.Stock != 0 {
-		if err := exisitingProduct.ChangeStock(args.Stock); err != nil {
-			return err
-		}
-	}
-
-	if args.CategoryID != 0 {
-		if err := exisitingProduct.ChangeCategoryID(args.CategoryID); err != nil {
-			return err
-		}
-	}
-
 	product := *exisitingProduct
 	product.UpdatedAt = time.Now()
 

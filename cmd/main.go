@@ -2,17 +2,37 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	appProduct "github.com/andreanpradanaa/trendstore/internal/application/product"
 	httpProduct "github.com/andreanpradanaa/trendstore/internal/infrastructure/http/product"
 	repoProduct "github.com/andreanpradanaa/trendstore/internal/infrastructure/persistence/repositories"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+type Validator struct {
+	validate *validator.Validate
+}
+
+func (v *Validator) Validate(i interface{}) error {
+	if err := v.validate.Struct(i); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
+}
+
 func main() {
 	e := echo.New()
+
+	// Set Validator
+	e.Validator = &Validator{validate: validator.New()}
+
+	// Middleware
+	e.Use(middleware.CORS())
 
 	// Init Connection
 	dsn := "host=localhost user=root password=password dbname=trendstore port=5432 sslmode=disable TimeZone=Asia/Shanghai"
