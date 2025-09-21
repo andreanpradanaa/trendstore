@@ -91,10 +91,6 @@ func (h *Handler) Update(c echo.Context) error {
 		return response.BadRequest(c, "invalid request payload", err)
 	}
 
-	// if err := c.Validate(form); err != nil {
-	// 	return response.BadRequest(c, "validation failed", err)
-	// }
-
 	if err := h.productService.UpdateProduct(form); err != nil {
 		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			return response.NotFound(c, "product not found", err)
@@ -103,4 +99,25 @@ func (h *Handler) Update(c echo.Context) error {
 	}
 
 	return response.SuccessOK(c, "product updated successfully", nil)
+}
+
+func (h *Handler) Delete(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return response.BadRequest(c, "product id is required", nil)
+	}
+
+	idInt, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return response.BadRequest(c, "invalid product ID", err)
+	}
+
+	if err := h.productService.Delete(idInt); err != nil {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
+			return response.NotFound(c, "product not found", err)
+		}
+		return response.InternalServerError(c, "failed to delete product", err)
+	}
+
+	return response.SuccessOK(c, "product deleted successfully", nil)
 }

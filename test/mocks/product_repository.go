@@ -30,6 +30,24 @@ func (_m *ProductRepository) Create(args *product.Product) error {
 	return r0
 }
 
+// Delete provides a mock function with given fields: id
+func (_m *ProductRepository) Delete(id int64) error {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Delete")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int64) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetByID provides a mock function with given fields: id
 func (_m *ProductRepository) GetByID(id int64) (*product.Product, error) {
 	ret := _m.Called(id)

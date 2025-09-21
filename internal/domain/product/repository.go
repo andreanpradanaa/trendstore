@@ -6,8 +6,8 @@ type Repository interface {
 	List() ([]Product, error)
 	GetByID(id int64) (*Product, error)
 	Update(args *Product) error
+	Delete(id int64) error
 
 	// TODO: need to implement
 	// GetProductsByCategoryID(categoryID int64) ([]*Product, error)
-	// DeleteProduct(id int64) error
 }

@@ -324,3 +324,56 @@ func TestService_Update(t *testing.T) {
 		})
 	}
 }
+
+func TestService_Delete(t *testing.T) {
+	tests := []struct {
+		name        string
+		productRepo *mocks.ProductRepository
+		id          int64
+		wantErr     bool
+	}{
+		{
+			name: "Success - Delete Product",
+			productRepo: func() *mocks.ProductRepository {
+				mockRepo := new(mocks.ProductRepository)
+				mockRepo.On("GetByID", int64(1)).Return(&product.Product{}, nil).Once()
+				mockRepo.On("Delete", int64(1)).Return(nil).Once()
+				return mockRepo
+			}(),
+			id:      1,
+			wantErr: false,
+		},
+		{
+			name: "Error - Delete Non-Existent Product",
+			productRepo: func() *mocks.ProductRepository {
+				mockRepo := new(mocks.ProductRepository)
+				mockRepo.On("GetByID", int64(2)).Return(&product.Product{}, errors.New("product not found")).Once()
+				return mockRepo
+			}(),
+			id:      2,
+			wantErr: true,
+		},
+		{
+			name: "Error - Repository Failure on Delete",
+			productRepo: func() *mocks.ProductRepository {
+				mockRepo := new(mocks.ProductRepository)
+				mockRepo.On("GetByID", int64(3)).Return(&product.Product{}, nil).Once()
+				mockRepo.On("Delete", int64(3)).Return(errors.New("database error")).Once()
+				return mockRepo
+			}(),
+			id:      3,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			service := NewService(tt.productRepo)
+			err := service.Delete(tt.id)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Delete() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			tt.productRepo.AssertExpectations(t)
+		})
+	}
+}

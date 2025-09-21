@@ -106,3 +106,16 @@ func (s *Service) UpdateProduct(args *dto.ProductUpdateRequest) error {
 
 	return nil
 }
+
+func (s *Service) Delete(id int64) error {
+	_, err := s.productRepo.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	err = s.productRepo.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

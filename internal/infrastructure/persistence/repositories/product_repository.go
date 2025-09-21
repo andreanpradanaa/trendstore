@@ -79,3 +79,11 @@ func (r *ProductRepository) Update(args *product.Product) error {
 
 	return nil
 }
+
+func (r *ProductRepository) Delete(id int64) error {
+	err := r.db.Delete(&product.Product{}, id).Error
+	if err != nil {
+		return fmt.Errorf("failed to delete product: %w", err)
+	}
+	return nil
+}

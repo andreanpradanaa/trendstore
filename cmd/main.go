@@ -30,10 +30,10 @@ func main() {
 	e.GET("api/v1/products", productHandler.List)
 	e.GET("api/v1/products/:id", productHandler.GetByID)
 	e.PUT("api/v1/products/:id", productHandler.Update)
+	e.DELETE("api/v1/products/:id", productHandler.Delete)
 
 	// TODO: add api product
 	// GET /api/v1/products?categoryId={catId}
-	// DELETE /api/v1/products/{productId}
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":5000"))
