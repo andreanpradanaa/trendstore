@@ -90,6 +90,24 @@ func (_m *ProductRepository) List() ([]product.Product, error) {
 	return r0, r1
 }
 
+// Update provides a mock function with given fields: args
+func (_m *ProductRepository) Update(args *product.Product) error {
+	ret := _m.Called(args)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Update")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*product.Product) error); ok {
+		r0 = rf(args)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewProductRepository creates a new instance of ProductRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewProductRepository(t interface {

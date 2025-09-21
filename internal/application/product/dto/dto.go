@@ -10,6 +10,15 @@ type ProductRequest struct {
 	CategoryID  int64   `json:"category_id"`
 }
 
+type ProductUpdateRequest struct {
+	ID          int64   `json:"id"`
+	Name        string  `json:"name,omitempty"`
+	Description string  `json:"description,omitempty"`
+	Price       float64 `json:"price,omitempty"`
+	Stock       int64   `json:"stock,omitempty"`
+	CategoryID  int64   `json:"category_id,omitempty"`
+}
+
 type ProductResponse struct {
 	ID          int64     `json:"id"`
 	Name        string    `json:"name"`

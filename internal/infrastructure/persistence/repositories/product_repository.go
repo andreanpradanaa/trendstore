@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/andreanpradanaa/trendstore/internal/domain/product"
 	"gorm.io/gorm"
@@ -43,4 +44,38 @@ func (r *ProductRepository) GetByID(id int64) (*product.Product, error) {
 	}
 
 	return res, nil
+}
+
+func (r *ProductRepository) Update(args *product.Product) error {
+	// Buat map untuk field yang akan diupdate
+	updates := make(map[string]interface{})
+
+	// Tambahkan field yang ingin diupdate (bisa disesuaikan dengan kondisi)
+	if args.Name != "" {
+		updates["name"] = args.Name
+	}
+	if args.Description != "" {
+		updates["description"] = args.Description
+	}
+	if args.Price != 0 {
+		updates["price"] = args.Price
+	}
+	if args.Stock != 0 {
+		updates["stock"] = args.Stock
+	}
+	// ... tambahkan field lainnya sesuai kebutuhan
+
+	updates["updated_at"] = time.Now()
+
+	if len(updates) > 0 {
+		err := r.db.Model(&product.Product{}).
+			Where("id = ?", args.ID).
+			Updates(updates).Error
+
+		if err != nil {
+			return fmt.Errorf("failed to update product: %w", err)
+		}
+	}
+
+	return nil
 }

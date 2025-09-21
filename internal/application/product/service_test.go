@@ -212,3 +212,115 @@ func TestService_GetByID(t *testing.T) {
 		})
 	}
 }
+
+func TestService_Update(t *testing.T) {
+	tests := []struct {
+		name        string
+		productRepo *mocks.ProductRepository
+		args        *dto.ProductUpdateRequest
+		wantErr     bool
+	}{
+		{
+			name: "Success - Update Product",
+			productRepo: func() *mocks.ProductRepository {
+				mockRepo := new(mocks.ProductRepository)
+				mockRepo.On("GetByID", int64(1)).Return(&product.Product{
+					ID:          1,
+					Name:        "NIKE",
+					Description: "Sepatu",
+					Price:       500,
+					Stock:       10,
+					CategoryID:  3,
+				}, nil).Once()
+				mockRepo.On("UpdateProduct", mock.Anything).Return(nil).Once()
+				return mockRepo
+			}(),
+			args: &dto.ProductUpdateRequest{
+				ID:          1,
+				Name:        "ADIDAS",
+				Description: "Sepatu Baru",
+				Price:       600,
+				Stock:       15,
+				CategoryID:  4,
+			},
+			wantErr: false,
+		},
+		{
+			name: "Error - Product Not Found",
+			productRepo: func() *mocks.ProductRepository {
+				mockRepo := new(mocks.ProductRepository)
+				mockRepo.On("GetByID", int64(2)).Return(nil, errors.New("product not found")).Once()
+				return mockRepo
+			}(),
+			args: &dto.ProductUpdateRequest{
+				ID:          2,
+				Name:        "ADIDAS",
+				Description: "Sepatu Baru",
+				Price:       600,
+				Stock:       15,
+				CategoryID:  4,
+			},
+			wantErr: true,
+		},
+		{
+			name: "Error - Update Product Fails",
+			productRepo: func() *mocks.ProductRepository {
+				mockRepo := new(mocks.ProductRepository)
+				mockRepo.On("GetByID", int64(3)).Return(&product.Product{
+					ID:          3,
+					Name:        "PUMA",
+					Description: "Sepatu Lama",
+					Price:       400,
+					Stock:       5,
+					CategoryID:  2,
+				}, nil).Once()
+				mockRepo.On("UpdateProduct", mock.Anything).Return(errors.New("update failed")).Once()
+				return mockRepo
+			}(),
+			args: &dto.ProductUpdateRequest{
+				ID:          3,
+				Name:        "PUMA Updated",
+				Description: "Sepatu Lama Updated",
+				Price:       450,
+				Stock:       8,
+				CategoryID:  2,
+			},
+			wantErr: true,
+		},
+		{
+			name: "Error - Invalid Product Name",
+			productRepo: func() *mocks.ProductRepository {
+				mockRepo := new(mocks.ProductRepository)
+				mockRepo.On("GetByID", int64(4)).Return(&product.Product{
+					ID:          4,
+					Name:        "REEBOK",
+					Description: "Sepatu Sport",
+					Price:       700,
+					Stock:       20,
+					CategoryID:  5,
+				}, nil).Once()
+				return mockRepo
+			}(),
+			args: &dto.ProductUpdateRequest{
+				ID:          4,
+				Name:        "AB", // Invalid name, too short
+				Description: "Sepatu Sport Updated",
+				Price:       750,
+				Stock:       25,
+				CategoryID:  5,
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			service := NewService(tt.productRepo)
+			err := service.UpdateProduct(tt.args)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UpdateProduct() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			tt.productRepo.AssertExpectations(t)
+		})
+	}
+}

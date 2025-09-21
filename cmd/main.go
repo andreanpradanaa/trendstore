@@ -29,11 +29,10 @@ func main() {
 	e.POST("api/v1/products", productHandler.Create)
 	e.GET("api/v1/products", productHandler.List)
 	e.GET("api/v1/products/:id", productHandler.GetByID)
+	e.PUT("api/v1/products/:id", productHandler.Update)
 
 	// TODO: add api product
 	// GET /api/v1/products?categoryId={catId}
-	// GET /api/v1/products?ids=1,2,3
-	// PUT /api/v1/products/{productId}
 	// DELETE /api/v1/products/{productId}
 
 	// Start Server

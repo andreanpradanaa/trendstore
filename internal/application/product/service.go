@@ -59,3 +59,50 @@ func (s *Service) GetByID(id int64) (*dto.ProductResponse, error) {
 	response := mapper.ToResponse(products)
 	return &response, nil
 }
+
+func (s *Service) UpdateProduct(args *dto.ProductUpdateRequest) error {
+	exisitingProduct, err := s.productRepo.GetByID(args.ID)
+	if err != nil {
+		return err
+	}
+
+	if args.Name != "" {
+		if err := exisitingProduct.ChangeName(args.Name); err != nil {
+			return err
+		}
+	}
+
+	if args.Description != "" {
+		if err := exisitingProduct.ChangeDescription(args.Description); err != nil {
+			return err
+		}
+	}
+
+	if args.Price != 0 {
+		if err := exisitingProduct.ChangePrice(args.Price); err != nil {
+			return err
+		}
+	}
+
+	if args.Stock != 0 {
+		if err := exisitingProduct.ChangeStock(args.Stock); err != nil {
+			return err
+		}
+	}
+
+	if args.CategoryID != 0 {
+		if err := exisitingProduct.ChangeCategoryID(args.CategoryID); err != nil {
+			return err
+		}
+	}
+
+	product := *exisitingProduct
+	product.UpdatedAt = time.Now()
+
+	err = s.productRepo.Update(&product)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
