@@ -6,6 +6,7 @@ import (
 
 	"github.com/andreanpradanaa/trendstore/internal/application/product/dto"
 	"github.com/andreanpradanaa/trendstore/internal/domain/product"
+	"github.com/andreanpradanaa/trendstore/internal/shared"
 	"github.com/andreanpradanaa/trendstore/test/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -171,6 +172,7 @@ func TestService_GetByID(t *testing.T) {
 				Price:       500,
 				Stock:       10,
 				CategoryID:  3,
+				Slug:        shared.GenerateSlug("NIKE"),
 			},
 			wantErr: false,
 		},

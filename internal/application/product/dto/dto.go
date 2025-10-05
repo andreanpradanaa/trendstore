@@ -22,6 +22,7 @@ type ProductUpdateRequest struct {
 type ProductResponse struct {
 	ID          int64     `json:"id"`
 	Name        string    `json:"name"`
+	Slug        string    `json:"slug"`
 	Description string    `json:"description"`
 	Price       float64   `json:"price"`
 	Stock       int64     `json:"stock"`

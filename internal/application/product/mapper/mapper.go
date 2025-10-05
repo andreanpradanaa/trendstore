@@ -3,12 +3,14 @@ package mapper
 import (
 	"github.com/andreanpradanaa/trendstore/internal/application/product/dto"
 	"github.com/andreanpradanaa/trendstore/internal/domain/product"
+	"github.com/andreanpradanaa/trendstore/internal/shared"
 )
 
 func ToResponse(domainProduct *product.Product) dto.ProductResponse {
 	return dto.ProductResponse{
 		ID:          domainProduct.ID,
 		Name:        domainProduct.Name,
+		Slug:        shared.GenerateSlug(domainProduct.Name),
 		Description: domainProduct.Description,
 		Price:       domainProduct.Price,
 		Stock:       domainProduct.Stock,
