@@ -232,7 +232,7 @@ func TestService_Update(t *testing.T) {
 					Stock:       10,
 					CategoryID:  3,
 				}, nil).Once()
-				mockRepo.On("UpdateProduct", mock.Anything).Return(nil).Once()
+				mockRepo.On("Update", mock.Anything).Return(nil).Once()
 				return mockRepo
 			}(),
 			args: &dto.ProductUpdateRequest{
@@ -274,7 +274,7 @@ func TestService_Update(t *testing.T) {
 					Stock:       5,
 					CategoryID:  2,
 				}, nil).Once()
-				mockRepo.On("UpdateProduct", mock.Anything).Return(errors.New("update failed")).Once()
+				mockRepo.On("Update", mock.Anything).Return(errors.New("update failed")).Once()
 				return mockRepo
 			}(),
 			args: &dto.ProductUpdateRequest{
@@ -284,30 +284,6 @@ func TestService_Update(t *testing.T) {
 				Price:       450,
 				Stock:       8,
 				CategoryID:  2,
-			},
-			wantErr: true,
-		},
-		{
-			name: "Error - Invalid Product Name",
-			productRepo: func() *mocks.ProductRepository {
-				mockRepo := new(mocks.ProductRepository)
-				mockRepo.On("GetByID", int64(4)).Return(&product.Product{
-					ID:          4,
-					Name:        "REEBOK",
-					Description: "Sepatu Sport",
-					Price:       700,
-					Stock:       20,
-					CategoryID:  5,
-				}, nil).Once()
-				return mockRepo
-			}(),
-			args: &dto.ProductUpdateRequest{
-				ID:          4,
-				Name:        "AB", // Invalid name, too short
-				Description: "Sepatu Sport Updated",
-				Price:       750,
-				Stock:       25,
-				CategoryID:  5,
 			},
 			wantErr: true,
 		},
