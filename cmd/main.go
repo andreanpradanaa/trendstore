@@ -4,9 +4,11 @@ import (
 	"log"
 	"net/http"
 
+	appCategory "github.com/andreanpradanaa/trendstore/internal/application/category"
 	appProduct "github.com/andreanpradanaa/trendstore/internal/application/product"
+	httpCategory "github.com/andreanpradanaa/trendstore/internal/infrastructure/http/category"
 	httpProduct "github.com/andreanpradanaa/trendstore/internal/infrastructure/http/product"
-	repoProduct "github.com/andreanpradanaa/trendstore/internal/infrastructure/persistence/repositories"
+	"github.com/andreanpradanaa/trendstore/internal/infrastructure/persistence/repositories"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -41,19 +43,26 @@ func main() {
 		log.Fatal("failed to connect database!")
 	}
 
-	productRepo := repoProduct.NewProductRepository(db)
+	// Register
+	productRepo := repositories.NewProductRepository(db)
 	productService := appProduct.NewService(productRepo)
 	productHandler := httpProduct.NewHandler(productService)
 
-	// Product Routes
-	e.POST("api/v1/products", productHandler.Create)
-	e.GET("api/v1/products", productHandler.List)
-	e.GET("api/v1/products/:id", productHandler.GetByID)
-	e.PUT("api/v1/products/:id", productHandler.Update)
-	e.DELETE("api/v1/products/:id", productHandler.Delete)
+	categoryRepo := repositories.NewCategoryRepository(db)
+	categoryService := appCategory.NewService(categoryRepo)
+	categoryHandler := httpCategory.NewHandler(*categoryService)
 
-	// TODO: add api product
-	// GET /api/v1/products?categoryId={catId}
+	v1 := e.Group("api/v1/")
+
+	// Product Routes
+	v1.POST("products", productHandler.Create)
+	v1.GET("products", productHandler.List)
+	v1.GET("products/:id", productHandler.GetByID)
+	v1.PUT("products/:id", productHandler.Update)
+	v1.DELETE("products/:id", productHandler.Delete)
+
+	// Category Routes
+	v1.POST("category", categoryHandler.Create)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":5000"))

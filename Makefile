@@ -13,10 +13,10 @@ new_migration:
 	migrate create -ext sql -dir db/migration -seq $(name)
 
 migrateup:
-	migrate --path db/migration --database "${DB_URL}" --verbose up	
+	migrate --path db/migration --database "${DB_URL}" --verbose up	1
 
 migratedown:
-	migrate --path db/migration --database "${DB_URL}" --verbose down
+	migrate --path db/migration --database "${DB_URL}" --verbose down 1
 
 sqlc:
 	sqlc generate
